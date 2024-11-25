@@ -4,22 +4,34 @@ SilverHeart 是一個現代化的智能防詐騙系統前端應用，使用 Reac
 
 ## 技術棧
 
-- **框架**: React 18 + TypeScript
-- **構建工具**: Vite
-- **樣式**: Tailwind CSS
-- **UI 組件**: shadcn/ui
+- **核心框架**: React 18 + TypeScript + Vite
+- **樣式方案**: Tailwind CSS
+- **UI 組件**: 
+  - shadcn/ui
+  - Radix UI Primitives
 - **圖標**: Lucide React
+- **工具庫**: 
+  - class-variance-authority
+  - clsx
+  - tailwind-merge
 
 ## 功能特點
 
 - 📱 即時通話監控
 - 🎯 AI 智能詐騙識別
 - 🔔 風險預警通知
-- 💳 可疑交易監控
+- 💳 交易監控與凍結
 - 👥 家人安全管理
 - 📊 風險等級評估
+- 🔒 智能凍結交易
+  - 自定義凍結時長
+  - 多級別凍結選項
+  - 交易限額設置
+- ⚡ 緊急聯絡功能
+  - 快速聯繫家人
+  - 多重緊急聯絡人管理
 
-## 安裝
+## 安裝指南
 
 1. 克隆專案:
 ```bash
@@ -33,8 +45,9 @@ cd silverheart-new
 npm install
 
 # 安裝 UI 組件相關依賴
-npm install lucide-react @radix-ui/react-slot clsx tailwindcss-animate class-variance-authority tailwind-merge
-npm install @radix-ui/react-dialog @radix-ui/react-icons
+npm install @radix-ui/react-slot @radix-ui/react-slider @radix-ui/react-switch 
+npm install @radix-ui/react-toast @radix-ui/react-dialog class-variance-authority
+npm install lucide-react clsx tailwind-merge
 
 # 安裝開發依賴
 npm install -D tailwindcss postcss autoprefixer @types/node
@@ -47,21 +60,28 @@ silverheart-new/
 ├── src/
 │   ├── components/
 │   │   ├── ui/
-│   │   │   ├── alert.tsx    # Alert 組件
-│   │   │   ├── card.tsx     # Card 組件
-│   │   │   └── sheet.tsx    # Sheet 組件
-│   │   └── AntiFraudApp.tsx # 主應用組件
+│   │   │   ├── alert.tsx     # 警告提示組件
+│   │   │   ├── button.tsx    # 按鈕組件
+│   │   │   ├── card.tsx      # 卡片組件
+│   │   │   ├── dialog.tsx    # 對話框組件
+│   │   │   ├── sheet.tsx     # 側邊欄組件
+│   │   │   ├── slider.tsx    # 滑塊組件
+│   │   │   ├── switch.tsx    # 開關組件
+│   │   │   ├── toast.tsx     # 通知提示組件
+│   │   │   └── use-toast.ts  # Toast Hook
+│   │   ├── AntiFraudApp.tsx  # 主應用組件
+│   │   └── FreezeTransaction.tsx # 交易凍結組件
 │   ├── lib/
-│   │   └── utils.ts         # 工具函數
-│   ├── App.tsx              # 應用入口
-│   ├── main.tsx             # 主入口
+│   │   └── utils.ts          # 工具函數
+│   ├── App.tsx               # 應用入口
+│   ├── main.tsx              # 主入口
 │   └── index.css            # 全局樣式
 ├── tailwind.config.js       # Tailwind 配置
 ├── vite.config.ts          # Vite 配置
 └── package.json            # 專案配置
 ```
 
-## 開發
+## 開發指南
 
 啟動開發服務器:
 ```bash
@@ -78,66 +98,78 @@ npm run build
 npm run preview
 ```
 
-## 主要組件
+## UI 組件使用示例
 
-### AntiFraudApp
-主要應用界面，包含：
-- 頂部導航欄
-- 風險預警提示
-- 功能按鈕區
-- 統計信息卡片
-- 緊急操作按鈕
+### 警告提示
+```tsx
+<Alert variant="destructive">
+  <AlertTriangle className="h-4 w-4" />
+  <AlertTitle>警告</AlertTitle>
+  <AlertDescription>檢測到可疑活動</AlertDescription>
+</Alert>
+```
 
-### 防詐檢測中心
-包含：
-- 即時監控狀態
-- 安全設置選項
-- 風險評估報告
+### 交易凍結
+```tsx
+<FreezeTransaction 
+  onFreeze={handleFreeze} 
+  onUnfreeze={handleUnfreeze}
+  transactionState={transactionState}
+/>
+```
 
-### 警報中心
-提供：
-- 即時警報顯示
-- 歷史警報記錄
-- 風險等級指示
+### 通知提示
+```tsx
+const { toast } = useToast()
 
-## 樣式定制
+toast({
+  title: "操作成功",
+  description: "交易已成功凍結"
+})
+```
 
-項目使用 Tailwind CSS 進行樣式管理，主題配置位於：
-- `tailwind.config.js`
-- `src/index.css` (全局樣式和CSS變量)
+## 配置說明
 
-## 貢獻指南
+### Tailwind 配置
+確保 `tailwind.config.js` 包含必要的配置：
+- 顏色系統
+- 動畫效果
+- 組件預設值
 
-1. Fork 專案
-2. 創建特性分支
-3. 提交更改
-4. 推送到分支
-5. 創建 Pull Request
+### 環境變量
+在 `.env` 文件中配置：
+- API 端點
+- 環境標識
+- 其他配置項
 
 ## 待開發功能
 
 - [ ] 深色模式支持
 - [ ] 多語言支持
 - [ ] 離線功能支持
+- [ ] 生物認證整合
 - [ ] 更多 AI 模型整合
-- [ ] 用戶數據分析儀表板
+- [ ] 風險評分系統
+- [ ] 交易行為分析
+- [ ] 家庭賬戶管理
+
+## 貢獻指南
+
+1. Fork 專案
+2. 創建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 開啟 Pull Request
 
 ## 授權
 
-本專案採用雙重授權模式：
+本專案使用 MIT 授權 - 查看 [LICENSE](LICENSE) 檔案瞭解詳情
 
-1. 社區版本：
-   - 遵循 AGPL-3.0 授權
-   - 適用於非商業用途
-   - 需要保持開源和分享改進
+Copyright (c) 2024 銀心永晟科技
 
-2. 商業版本：
-   - 需要獲得銀心永晟科技的商業授權
-   - 提供額外的功能和支持
-   - 允許閉源使用和商業部署
+## 支持與聯繫
 
-詳細授權條款請聯繫：[聯繫方式]
-
-## 聯繫方式
-
-[LinkedIN:https://www.linkedin.com/in/zih-jia-luo-2b49a31b3/]
+如有問題或建議，請聯繫：
+- Email: [kilong31442@gmail.com]
+- Website: [https://www.linkedin.com/in/zih-jia-luo-2b49a31b3/,https://medium.com/@kilong31442]
+- Issue Tracker: [https://github.com/kevin801221/silverheart_app.git]
