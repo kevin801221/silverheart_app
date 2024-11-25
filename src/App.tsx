@@ -1,8 +1,7 @@
-// src/App.tsx
-import MainInterface from './components/MainInterface'
+import AntiFraudApp from './components/AntiFraudApp'
 
 function App() {
-  return <MainInterface />
+  return <AntiFraudApp />
 }
 
 export default App
