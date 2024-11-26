@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Bell, Shield, Phone, Lock, MessageSquare, Menu, ArrowLeft, AlertTriangle,
   Settings, FileText, Users, History, ChevronRight, Smartphone, VolumeX,
-  CreditCard, Share2, ShieldCheck, BookOpen, HelpCircle, UserCog, CircleDollarSign
+  CreditCard, Share2, ShieldCheck, BookOpen, HelpCircle, UserCog, CircleDollarSign,Image
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import FreezeTransaction from './FreezeTransaction';
-
+import ImageAnalysis from './ImageAnalysis';
 // 定義介面
 interface TransactionState {
   isFrozen: boolean;
@@ -366,7 +366,7 @@ const AntiFraudApp = () => {
 
           {/* Main Function Buttons */}
           
-          <div className="grid grid-cols-2 gap-4 p-4 mt-4">
+          <div className="grid grid-cols-3 gap-4 p-4 mt-4">
             <button 
               className="bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-lg flex flex-col items-center gap-3 transition-colors shadow-md"
               onClick={() => setActiveSection('fraudDetection')}
@@ -383,7 +383,17 @@ const AntiFraudApp = () => {
               <span className="text-lg">警報中心</span>
               <span className="text-sm text-blue-100">2則新通知</span>
             </button>
+            {/* 新增的 AI 圖片分析按鈕 */}
+            <button 
+              className="bg-purple-500 hover:bg-purple-600 text-white p-6 rounded-lg flex flex-col items-center gap-2 transition-colors shadow-md"
+              onClick={() => setActiveSection('imageAnalysis')}
+            >
+              <Image className="w-8 h-8" />
+              <span className="text-lg font-medium">AI圖片分析</span>
+              <span className="text-sm text-purple-100">詐騙圖片檢測</span>
+            </button>
           </div>
+          
 
           {/* Statistics Card */}
           <Card className="mx-4 mt-4">
@@ -405,7 +415,8 @@ const AntiFraudApp = () => {
 
       {activeSection === 'fraudDetection' && renderFraudDetection()}
       {activeSection === 'alerts' && renderAlerts()}
-
+      {activeSection === 'imageAnalysis' && <ImageAnalysis />}
+      {/* 各部分的條件渲染 */}
       {/* Emergency Actions */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
         <div className="grid grid-cols-2 gap-4">
