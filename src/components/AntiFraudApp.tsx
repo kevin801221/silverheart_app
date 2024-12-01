@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import MainInterface from './MainInterface';
+import PersonalSettings from './pages/PersonalSettings';
 import { 
   Bell, Shield, Phone, Lock, MessageSquare, Menu, ArrowLeft, AlertTriangle,
   Settings, FileText, Users, History, ChevronRight, Smartphone, VolumeX,
@@ -24,6 +27,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import FreezeTransaction from './FreezeTransaction';
 import ImageAnalysis from './ImageAnalysis';
+import { useNavigate } from 'react-router-dom';
 // 定義介面
 interface TransactionState {
   isFrozen: boolean;
@@ -45,6 +49,7 @@ interface EmergencyContact {
 }
 
 const AntiFraudApp = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('main');
   const { toast } = useToast();
   
@@ -292,190 +297,206 @@ const AntiFraudApp = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <header className="bg-gradient-to-r from-blue-600 to-blue-400 p-4 text-white relative">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {activeSection !== 'main' && (
-              <ArrowLeft 
-                className="w-6 h-6 cursor-pointer" 
-                onClick={() => setActiveSection('main')}
-              />
-            )}
-            <Shield className="w-8 h-8" />
-            <h1 className="text-xl font-bold">銀心永晟 - 智能防詐系統</h1>
+    <Routes>
+      <Route path="/" element={
+        <div className="min-h-screen bg-gray-50">
+        {/* Header Section */}
+        <header className="bg-gradient-to-r from-blue-600 to-blue-400 p-4 text-white relative">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        {activeSection !== 'main' && (
+          <ArrowLeft
+            className="w-6 h-6 cursor-pointer"
+            onClick={() => setActiveSection('main')}
+          />
+        )}
+        <Shield className="w-8 h-8" />
+        <h1 className="text-xl font-bold">銀心永晟 - 智能防詐系統</h1>
+      </div>
+      <Sheet>
+        <SheetTrigger>
+          <Menu className="w-6 h-6" />
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>系統選單</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 space-y-4">
+            {[
+              { icon: <UserCog />, label: '個人設置', path: '/settings/personal' },
+              { icon: <Users />, label: '家人管理', path: '/family' },
+              { icon: <History />, label: '操作記錄', path: '/history' },
+              { icon: <BookOpen />, label: '防詐指南', path: '/guide' },
+              { icon: <FileText />, label: '使用條款', path: '/terms' },
+              { icon: <HelpCircle />, label: '幫助中心', path: '/help' },
+              { icon: <Settings />, label: '系統設置', path: '/settings/system' }
+            ].map((item, index) => (
+              <button
+                key={index}
+                className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-lg"
+                onClick={() => {
+                  setActiveSection(item.path);
+                  navigate(item.path);
+                }}
+              >
+                <div className="w-5 h-5 text-gray-500">{item.icon}</div>
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
-          <Sheet>
-            <SheetTrigger>
-              <Menu className="w-6 h-6" />
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>系統選單</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-4">
-                {[
-                  { icon: <UserCog />, label: '個人設置' },
-                  { icon: <Users />, label: '家人管理' },
-                  { icon: <History />, label: '操作記錄' },
-                  { icon: <BookOpen />, label: '防詐指南' },
-                  { icon: <FileText />, label: '使用條款' },
-                  { icon: <HelpCircle />, label: '幫助中心' },
-                  { icon: <Settings />, label: '系統設置' }
-                ].map((item, index) => (
-                  <button 
+        </SheetContent>
+      </Sheet>
+    </div>
+  </header>
+  
+        {activeSection === 'main' && (
+          <>
+            {/* Alert Section */}
+            <Alert className="mx-4 mt-4 border-red-500 bg-red-50">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <AlertTitle className="text-red-500 font-bold">
+                發現潛在詐騙風險！
+              </AlertTitle>
+              <AlertDescription className="text-red-700">
+                檢測到可疑語音模式
+              </AlertDescription>
+            </Alert>
+  
+            {/* Transaction Status */}
+            {transactionState.isFrozen && (
+              <Alert 
+                className="mx-4 mt-4" 
+                variant="destructive"
+              >
+                <Lock className="h-5 w-5" />
+                <AlertTitle>交易已凍結</AlertTitle>
+                <AlertDescription>
+                  將持續至 {transactionState.frozenUntil?.toLocaleString()}
+                </AlertDescription>
+              </Alert>
+            )}
+  
+            {/* Main Function Buttons */}
+            
+            <div className="grid grid-cols-3 gap-4 p-4 mt-4">
+              <button 
+                className="bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-lg flex flex-col items-center gap-3 transition-colors shadow-md"
+                onClick={() => setActiveSection('fraudDetection')}
+              >
+                <Shield className="w-8 h-8" />
+                <span className="text-lg">詐騙檢測</span>
+                <span className="text-sm text-blue-100">AI智能防護</span>
+              </button>
+              <button 
+                className="bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-lg flex flex-col items-center gap-3 transition-colors shadow-md"
+                onClick={() => setActiveSection('alerts')}
+              >
+                <Bell className="w-8 h-8" />
+                <span className="text-lg">警報中心</span>
+                <span className="text-sm text-blue-100">2則新通知</span>
+              </button>
+              {/* 新增的 AI 圖片分析按鈕 */}
+              <button 
+                className="bg-purple-500 hover:bg-purple-600 text-white p-6 rounded-lg flex flex-col items-center gap-2 transition-colors shadow-md"
+                onClick={() => setActiveSection('imageAnalysis')}
+              >
+                <Image className="w-8 h-8" />
+                <span className="text-lg font-medium">AI圖片分析</span>
+                <span className="text-sm text-purple-100">詐騙圖片檢測</span>
+              </button>
+            </div>
+            
+  
+            {/* Statistics Card */}
+            <Card className="mx-4 mt-4">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-bold text-gray-700">今日已阻擋詐騙次數</h3>
+                    <p className="text-2xl font-bold text-blue-600 mt-1">3</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-700">當前風險等級</h3>
+                    <p className="text-2xl font-bold text-red-600 mt-1">高</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
+  
+        {activeSection === 'fraudDetection' && renderFraudDetection()}
+        {activeSection === 'alerts' && renderAlerts()}
+        {activeSection === 'imageAnalysis' && <ImageAnalysis />}
+        {/* 各部分的條件渲染 */}
+        {/* Emergency Actions */}
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+          <div className="grid grid-cols-2 gap-4">
+            <FreezeTransaction 
+              onFreeze={handleFreeze} 
+              onUnfreeze={handleUnfreeze}
+              transactionState={transactionState}
+            />
+            <div className="relative group">
+              <button 
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                onClick={() => {
+                  if (emergencyContacts.length > 0) {
+                    handleEmergencyCall(emergencyContacts[0]);
+                  }
+                }}
+              >
+                <Phone className="w-6 h-6" />
+                <span>聯絡家人</span>
+              </button>
+              {/* 緊急聯絡人下拉選單 */}
+              <div className="hidden group-hover:block absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border">
+                {emergencyContacts.map((contact, index) => (
+                  <button
                     key={index}
-                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-lg"
+                    className="w-full p-3 flex items-center gap-3 hover:bg-gray-50 text-left"
+                    onClick={() => handleEmergencyCall(contact)}
                   >
-                    <div className="w-5 h-5 text-gray-500">{item.icon}</div>
-                    <span>{item.label}</span>
+                    <Phone className="w-5 h-5 text-blue-500" />
+                    <div>
+                      <div className="font-medium">{contact.name}</div>
+                      <div className="text-sm text-gray-500">{contact.relation}</div>
+                    </div>
                   </button>
                 ))}
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
-
-      {activeSection === 'main' && (
-        <>
-          {/* Alert Section */}
-          <Alert className="mx-4 mt-4 border-red-500 bg-red-50">
-            <AlertTriangle className="h-5 w-5 text-red-500" />
-            <AlertTitle className="text-red-500 font-bold">
-              發現潛在詐騙風險！
-            </AlertTitle>
-            <AlertDescription className="text-red-700">
-              檢測到可疑語音模式
-            </AlertDescription>
-          </Alert>
-
-          {/* Transaction Status */}
-          {transactionState.isFrozen && (
-            <Alert 
-              className="mx-4 mt-4" 
-              variant="destructive"
-            >
-              <Lock className="h-5 w-5" />
-              <AlertTitle>交易已凍結</AlertTitle>
-              <AlertDescription>
-                將持續至 {transactionState.frozenUntil?.toLocaleString()}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Main Function Buttons */}
-          
-          <div className="grid grid-cols-3 gap-4 p-4 mt-4">
-            <button 
-              className="bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-lg flex flex-col items-center gap-3 transition-colors shadow-md"
-              onClick={() => setActiveSection('fraudDetection')}
-            >
-              <Shield className="w-8 h-8" />
-              <span className="text-lg">詐騙檢測</span>
-              <span className="text-sm text-blue-100">AI智能防護</span>
-            </button>
-            <button 
-              className="bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-lg flex flex-col items-center gap-3 transition-colors shadow-md"
-              onClick={() => setActiveSection('alerts')}
-            >
-              <Bell className="w-8 h-8" />
-              <span className="text-lg">警報中心</span>
-              <span className="text-sm text-blue-100">2則新通知</span>
-            </button>
-            {/* 新增的 AI 圖片分析按鈕 */}
-            <button 
-              className="bg-purple-500 hover:bg-purple-600 text-white p-6 rounded-lg flex flex-col items-center gap-2 transition-colors shadow-md"
-              onClick={() => setActiveSection('imageAnalysis')}
-            >
-              <Image className="w-8 h-8" />
-              <span className="text-lg font-medium">AI圖片分析</span>
-              <span className="text-sm text-purple-100">詐騙圖片檢測</span>
-            </button>
-          </div>
-          
-
-          {/* Statistics Card */}
-          <Card className="mx-4 mt-4">
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-bold text-gray-700">今日已阻擋詐騙次數</h3>
-                  <p className="text-2xl font-bold text-blue-600 mt-1">3</p>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-700">當前風險等級</h3>
-                  <p className="text-2xl font-bold text-red-600 mt-1">高</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      )}
-
-      {activeSection === 'fraudDetection' && renderFraudDetection()}
-      {activeSection === 'alerts' && renderAlerts()}
-      {activeSection === 'imageAnalysis' && <ImageAnalysis />}
-      {/* 各部分的條件渲染 */}
-      {/* Emergency Actions */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
-        <div className="grid grid-cols-2 gap-4">
-          <FreezeTransaction 
-            onFreeze={handleFreeze} 
-            onUnfreeze={handleUnfreeze}
-            transactionState={transactionState}
-          />
-          <div className="relative group">
-            <button 
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg flex items-center justify-center gap-2 transition-colors"
-              onClick={() => {
-                if (emergencyContacts.length > 0) {
-                  handleEmergencyCall(emergencyContacts[0]);
-                }
-              }}
-            >
-              <Phone className="w-6 h-6" />
-              <span>聯絡家人</span>
-            </button>
-            {/* 緊急聯絡人下拉選單 */}
-            <div className="hidden group-hover:block absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border">
-              {emergencyContacts.map((contact, index) => (
-                <button
-                  key={index}
-                  className="w-full p-3 flex items-center gap-3 hover:bg-gray-50 text-left"
-                  onClick={() => handleEmergencyCall(contact)}
-                >
-                  <Phone className="w-5 h-5 text-blue-500" />
-                  <div>
-                    <div className="font-medium">{contact.name}</div>
-                    <div className="text-sm text-gray-500">{contact.relation}</div>
-                  </div>
-                </button>
-              ))}
             </div>
           </div>
         </div>
+  
+        {/* Chatbot Button */}
+        <button 
+          className="fixed bottom-20 right-4 bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition-colors"
+          onClick={() => {
+            toast({
+              title: "AI 助手已啟動",
+              description: "有什麼我可以幫您的嗎？",
+            });
+          }}
+        >
+          <MessageSquare className="w-6 h-6" />
+        </button>
+  
+        {/* Toast 提供者 */}
+        <ToastProvider>
+          <ToastViewport />
+        </ToastProvider>
       </div>
+      } />
+      <Route path="/settings/personal" element={<PersonalSettings />} />
+      {/* 其他路由 */}
+    </Routes>
+  </div>
 
-      {/* Chatbot Button */}
-      <button 
-        className="fixed bottom-20 right-4 bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition-colors"
-        onClick={() => {
-          toast({
-            title: "AI 助手已啟動",
-            description: "有什麼我可以幫您的嗎？",
-          });
-        }}
-      >
-        <MessageSquare className="w-6 h-6" />
-      </button>
-
-      {/* Toast 提供者 */}
-      <ToastProvider>
-        <ToastViewport />
-      </ToastProvider>
-    </div>
   );
 };
 
 export default AntiFraudApp;
+
+
+
