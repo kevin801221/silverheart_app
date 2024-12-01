@@ -2,6 +2,8 @@
 
 SilverHeart 是一個現代化的智能防詐騙系統前端應用，使用 React + TypeScript + Tailwind CSS 開發，旨在幫助用戶預防和識別各類詐騙行為。
 
+# 專案架構圖：
+![專案架構road map][(/Users/lo-ai/github_items/silverheart_app/src/assets/主題.png)]
 ## 技術棧
 
 - **核心框架**: React 18 + TypeScript + Vite
