@@ -24,6 +24,24 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import FreezeTransaction from './FreezeTransaction';
 import ImageAnalysis from './ImageAnalysis';
+import AntiScamGuide from './pages/AntiScamGuide';
+import TermsOfService from './pages/TermsOfService';
+import HelpCenter from './pages/HelpCenter';
+
+// 更新 activeSection 的類型
+type SectionType = 
+  | 'main'
+  | 'fraudDetection'
+  | 'alerts'
+  | 'imageAnalysis'
+  | 'userSettings'
+  | 'familyManagement'
+  | 'operationHistory'
+  | 'antiScamGuide'
+  | 'termsOfService'
+  | 'helpCenter'
+  | 'systemSettings';
+
 // 定義介面
 interface TransactionState {
   isFrozen: boolean;
@@ -45,7 +63,8 @@ interface EmergencyContact {
 }
 
 const AntiFraudApp = () => {
-  const [activeSection, setActiveSection] = useState('main');
+  
+  const [activeSection, setActiveSection] = useState<SectionType>('main');
   const { toast } = useToast();
   
   // 交易狀態管理
@@ -306,34 +325,67 @@ const AntiFraudApp = () => {
             <h1 className="text-xl font-bold">銀心永晟 - 智能防詐系統</h1>
           </div>
           <Sheet>
-            <SheetTrigger>
-              <Menu className="w-6 h-6" />
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>系統選單</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-4">
-                {[
-                  { icon: <UserCog />, label: '個人設置' },
-                  { icon: <Users />, label: '家人管理' },
-                  { icon: <History />, label: '操作記錄' },
-                  { icon: <BookOpen />, label: '防詐指南' },
-                  { icon: <FileText />, label: '使用條款' },
-                  { icon: <HelpCircle />, label: '幫助中心' },
-                  { icon: <Settings />, label: '系統設置' }
-                ].map((item, index) => (
-                  <button 
-                    key={index}
-                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-lg"
-                  >
-                    <div className="w-5 h-5 text-gray-500">{item.icon}</div>
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+      <SheetTrigger>
+        <Menu className="w-6 h-6" />
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>系統選單</SheetTitle>
+        </SheetHeader>
+        <div className="mt-6 space-y-4">
+          {[
+            { 
+              icon: <UserCog />, 
+              label: '個人設置',
+              section: 'userSettings'
+            },
+            { 
+              icon: <Users />, 
+              label: '家人管理',
+              section: 'familyManagement'
+            },
+            { 
+              icon: <History />, 
+              label: '操作記錄',
+              section: 'operationHistory'
+            },
+            { 
+              icon: <BookOpen />, 
+              label: '防詐指南',
+              section: 'antiScamGuide'
+            },
+            { 
+              icon: <FileText />, 
+              label: '使用條款',
+              section: 'termsOfService'
+            },
+            { 
+              icon: <HelpCircle />, 
+              label: '幫助中心',
+              section: 'helpCenter'
+            },
+            { 
+              icon: <Settings />, 
+              label: '系統設置',
+              section: 'systemSettings'
+            }
+          ].map((item, index) => (
+            <button
+              key={index}
+              className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-lg transition-colors"
+              onClick={() => {
+                setActiveSection(item.section as SectionType);
+                // 可選：關閉側邊選單
+                document.querySelector('[data-radix-ui-dialog-close]')?.click();
+              }}
+            >
+              <div className="w-5 h-5 text-gray-500">{item.icon}</div>
+              <span className="text-gray-700">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </SheetContent>
+    </Sheet>
         </div>
       </header>
 
@@ -416,6 +468,7 @@ const AntiFraudApp = () => {
       {activeSection === 'fraudDetection' && renderFraudDetection()}
       {activeSection === 'alerts' && renderAlerts()}
       {activeSection === 'imageAnalysis' && <ImageAnalysis />}
+      
       {/* 各部分的條件渲染 */}
       {/* Emergency Actions */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
