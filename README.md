@@ -261,3 +261,82 @@ npm install -D typescript @types/react @types/react-dom
 ```bash
 npm install -D vite @vitejs/plugin-react
 ```
+
+
+## 🎯 New Feature: Fraud Detection Workflow System
+
+Our app has implemented a new workflow system based on the LangGraph design concept, providing a modular and flexible approach to fraud detection.
+
+### Core Components
+
+#### 1. Tool Nodes
+- `TextAnalysisTool`: Analyzes suspicious text messages
+- `ImageAnalysisTool`: Detects fraudulent images
+- `TransactionAnalysisTool`: Monitors suspicious transactions
+- `PhoneCallAnalysisTool`: Analyzes call patterns for fraud detection
+
+#### 2. Workflow State Management
+The system maintains a comprehensive state including:
+- Message history
+- Current analysis stage
+- Risk level assessment
+- Detection results from multiple tools
+
+#### 3. Event-Driven Architecture
+- Real-time analysis updates
+- Asynchronous processing
+- UI integration through event emission
+
+### Implementation Example
+
+```typescript
+const workflow = new FraudDetectionWorkflow();
+
+// Event listener setup
+workflow.on('analysisComplete', ({ type, result, state }) => {
+  if (state.riskLevel > 0.8) {
+    triggerHighRiskAlert(result);
+  }
+});
+
+// Multiple analysis types support
+await workflow.analyze(textData, "text");
+await workflow.analyze(imageData, "image");
+await workflow.analyze(transactionData, "transaction");
+
+// Comprehensive report generation
+const report = await workflow.generateReport();
+```
+
+### Key Benefits
+
+1. **Modularity**
+   - Independent analysis modules
+   - Easy to add new detection tools
+   - Simplified testing and maintenance
+
+2. **State Management**
+   - Complete workflow state tracking
+   - Historical analysis preservation
+   - Multi-step analysis support
+
+3. **Event-Driven System**
+   - Event-based notifications
+   - Asynchronous workflow
+   - Seamless UI integration
+
+4. **Extensibility**
+   - Simple tool addition process
+   - Custom analysis logic support
+   - Flexible reporting mechanism
+
+### Future Enhancements
+
+- Integration with machine learning models
+- Additional analysis tools
+- Enhanced reporting capabilities
+- Real-time monitoring dashboard
+
+---
+
+[Remaining previous content...]
