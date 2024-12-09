@@ -29,6 +29,7 @@ import { useToast } from "@/components/ui/use-toast";
 import FreezeTransaction from './FreezeTransaction';
 import ImageAnalysis from './ImageAnalysis';
 import LineManagement from './pages/LineManagement';
+import FamilyManagement from './pages/FamilyManagement';
 import { useNavigate } from 'react-router-dom';
 
 // 定義介面
@@ -494,6 +495,7 @@ const AntiFraudApp = () => {
         } />
         <Route path="/settings/personal" element={<PersonalSettings />} />
         <Route path="/line-management" element={<LineManagement />} />
+        <Route path="/family" element={<FamilyManagement />} />
         {/* 其他路由 */}
       </Routes>
     </div>
