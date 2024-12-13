@@ -1,39 +1,13 @@
 # SilverHeart - 智能防詐系統
 
-SilverHeart 是一個現代化的智能防詐騙系統前端應用，使用 React + TypeScript + Tailwind CSS 開發，整合了 AI 圖片分析和 Line 管理功能，旨在提供全方位的防詐騙解決方案。
+SilverHeart 是一個現代化的智能防詐騙系統，使用 React + TypeScript + Tailwind CSS 開發，整合了 AI 圖片分析和 Line 管理功能，提供全方位的防詐騙解決方案。
 
 ## 專案架構圖
 ![專案架構road map](/src/assets/structure.png)
 
-## 技術棧
-- **核心框架**: 
-  - React 18 + TypeScript + Vite
-  - React Router DOM v6
-- **樣式方案**: 
-  - Tailwind CSS
-  - CSS Modules
-- **UI 組件**:
-  - shadcn/ui
-  - Radix UI Primitives
-  - Recharts (資料視覺化)
-- **狀態管理**:
-  - React Hooks
-  - Context API
-- **圖標**: Lucide React
-- **工具庫**:
-  - class-variance-authority
-  - clsx
-  - tailwind-merge
-- **API 整合**:
-  - LINE Messaging API
-  - Ollama API (AI 模型)
-- **數據庫**:
-  - MongoDB (消息歷史)
-  - Redis (快取)
-  - Vector Database (RAG 系統)
+## 核心功能
 
-## 功能特點
-### 核心功能
+### 基礎功能
 - 📱 即時通話監控
 - 🎯 AI 智能詐騙識別
 - 🔔 風險預警通知
@@ -64,341 +38,246 @@ SilverHeart 是一個現代化的智能防詐騙系統前端應用，使用 Reac
   - 快速聯繫家人
   - 多重緊急聯絡人管理
 
-## 安裝指南
+## 技術架構
+
+### 前端技術
+- **核心框架**: React 18 + TypeScript + Vite
+- **路由**: React Router DOM v6
+- **樣式**: Tailwind CSS + CSS Modules
+- **UI 組件**: 
+  - shadcn/ui
+  - Radix UI Primitives
+  - Recharts (資料視覺化)
+- **狀態管理**: React Hooks + Context API
+- **工具庫**:
+  - class-variance-authority
+  - clsx
+  - tailwind-merge
+- **圖標**: Lucide React
+
+### 後端整合
+- **LINE Bot 服務**:
+  - LINE Messaging API
+  - Express.js
+  - OpenAI GPT-4
+- **AI 服務**: 
+  - Ollama API
+  - RAG 系統
+- **數據存儲**:
+  - MongoDB (消息歷史)
+  - Redis (快取)
+  - Vector Database (RAG 系統)
+
+  ## 安裝與部署指南
+
+### 前端安裝
 1. 克隆專案:
 ```bash
-git clone [repository-url]
-cd silverheart-new
+git clone https://github.com/kevin801221/silverheart_app.git
+cd silverheart_app
 ```
 
-2. 安裝依賴:
+2. 安裝核心依賴:
 ```bash
-# 核心依賴
+# 安裝基礎依賴
 npm install
 
 # UI 組件相關依賴
 npm install @radix-ui/react-slot @radix-ui/react-slider @radix-ui/react-switch
 npm install @radix-ui/react-toast @radix-ui/react-dialog @radix-ui/react-tabs
 npm install class-variance-authority lucide-react clsx tailwind-merge
-
-# 路由相關
-npm install react-router-dom
-
-# 資料視覺化
-npm install recharts
-
-# API 整合
-npm install @line/bot-sdk
-npm install ollama
-
-# 數據庫驅動
-npm install mongodb
-npm install redis
-npm install @pinecone-database/pinecone
+npm install react-router-dom recharts
 
 # 開發依賴
-npm install -D tailwindcss postcss autoprefixer @types/node
+npm install -D tailwindcss postcss autoprefixer
+npm install -D typescript @types/react @types/react-dom @types/node
 ```
 
-3. 環境配置:
-創建 `.env` 文件：
+### LINE Bot 服務安裝
+1. 安裝 LINE Bot 相關依賴:
+```bash
+npm install express @line/bot-sdk openai dotenv
+```
+
+2. 環境配置:
+創建 `.env` 文件並填入以下配置：
 ```env
 # Line Bot 配置
 LINE_CHANNEL_ACCESS_TOKEN=your_access_token
 LINE_CHANNEL_SECRET=your_channel_secret
+OPENAI_API_KEY=your_openai_api_key
 
-# 數據庫配置
-MONGODB_URI=your_mongodb_uri
-REDIS_URL=your_redis_url
-PINECONE_API_KEY=your_pinecone_api_key
-
-# Ollama API 配置
-OLLAMA_API_URL=http://localhost:11434
+# 前端配置
+VITE_API_URL=http://localhost:3001
 ```
 
-## 專案結構
+### 啟動服務
+
+1. 啟動前端開發服務器:
+```bash
+npm run dev
 ```
-silverheart-new/
+前端服務將在 http://localhost:5173 運行
+
+2. 啟動 LINE Bot 服務:
+```bash
+# 切換到 server 目錄
+cd server
+
+# 啟動服務
+node lineBotService.js
+```
+LINE Bot 服務將在 http://localhost:3001 運行
+
+3. 啟動 ngrok 進行外網連接:
+```bash
+ngrok http 3001
+```
+
+### LINE Bot 配置
+1. 前往 [LINE Developers Console](https://developers.line.biz/)
+2. 在您的 Channel 設定中:
+   - 設置 Webhook URL: `https://your-ngrok-url/webhook`
+   - 開啟 "Use webhook" 選項
+   - 點擊 "Verify" 按鈕測試連接
+
+### 專案結構
+```
+silverheart_app/
 ├── src/
-│ ├── components/
-│ │ ├── ui/
-│ │ │ ├── alert.tsx
-│ │ │ ├── button.tsx
-│ │ │ ├── card.tsx
-│ │ │ ├── dialog.tsx
-│ │ │ ├── sheet.tsx
-│ │ │ ├── slider.tsx
-│ │ │ ├── switch.tsx
-│ │ │ ├── tabs.tsx        # 新增
-│ │ │ ├── toast.tsx
-│ │ │ └── use-toast.ts
-│ │ ├── pages/           # 新增
-│ │ │ ├── PersonalSettings.tsx
-│ │ │ ├── LineManagement.tsx
-│ │ │ └── FamilyManagement.tsx
-│ │ ├── AntiFraudApp.tsx
-│ │ ├── FreezeTransaction.tsx
-│ │ ├── ImageAnalysis.tsx  # 新增
-│ │ └── MainInterface.tsx
-│ ├── services/          # 新增
-│ │ ├── lineService.ts
-│ │ └── ollamaService.ts
-│ ├── lib/
-│ │ └── utils.ts
-│ ├── App.tsx
-│ ├── main.tsx
-│ └── index.css
+│   ├── components/
+│   │   ├── ui/              # UI 組件
+│   │   ├── pages/           # 頁面組件
+│   │   └── ...
+│   ├── services/            # 服務層
+│   └── lib/                 # 工具函數
+├── server/
+│   └── lineBotService.js    # LINE Bot 服務
+├── .env                     # 環境變數
+└── README.md
 ```
 
-## 📦 部署指南
+### 生產環境部署
 
-### 開發環境
-```bash
-# 啟動本地開發
-npm run dev
-
-# 建立測試版本
-npm run build:staging
-
-# 運行測試
-npm run test
-```
-
-### 生產環境
-```bash
-# 建立生產版本
-npm run build
-
-# 啟動生產服務
-npm run start
-```
-
-## 🔄 工作流程
-
-### 防詐騙分析流程
-1. 接收用戶訊息
-2. 多維度分析
-3. 風險等級評估
-4. 智能響應生成
-5. 結果推送通知
-
-### Line Bot 命令
-```
-/analyze - 分析當前對話
-/report - 生成風險報告
-/help - 顯示幫助信息
-/clear - 清除對話歷史
-```
-
-## 📈 開發路線圖
-
-### 近期計劃
-- [ ] GPT-4 集成優化
-- [ ] 多語言支持
-- [ ] 離線模式
-- [ ] 生物認證
-
-### 長期規劃
-- [ ] 區塊鏈整合
-- [ ] 跨平台支持
-- [ ] AI 模型優化
-- [ ] 社群功能
-
-## 🤝 參與貢獻
-
-我們歡迎所有形式的貢獻，包括：
-- 🐛 Bug 報告
-- 💡 新功能建議
-- 📝 文檔改進
-- 🔧 代碼優化
-
-## 開發指南
-### 啟動開發服務器:
-```bash
-npm run dev
-```
-
-### 建構生產版本:
+1. 建構前端生產版本:
 ```bash
 npm run build
 ```
 
-### 預覽生產版本:
+2. 預覽生產版本:
 ```bash
 npm run preview
 ```
 
-## 路由配置
+3. 部署 LINE Bot 服務:
+```bash
+# 使用 PM2 運行服務（推薦）
+npm install -g pm2
+pm2 start server/lineBotService.js
+
+# 或使用普通方式運行
+node server/lineBotService.js
+```
+
+## 開發指南
+
+### 路由配置
 ```tsx
 <BrowserRouter>
   <Routes>
     <Route path="/" element={<AntiFraudApp />}>
       <Route path="/settings/personal" element={<PersonalSettings />} />
       <Route path="/line-management" element={<LineManagement />} />
-      {/* 其他路由 */}
+      <Route path="/family-management" element={<FamilyManagement />} />
     </Route>
   </Routes>
 </BrowserRouter>
 ```
 
-## 新增功能示例
-### Line 管理介面
-```tsx
-<Tabs defaultValue="groups">
-  <TabsList>
-    <TabsTrigger value="groups">群組管理</TabsTrigger>
-    <TabsTrigger value="api">API 監控</TabsTrigger>
-    <TabsTrigger value="history">歷史分析</TabsTrigger>
-  </TabsList>
-  {/* Tab 內容 */}
-</Tabs>
-```
+### Fraud Detection Workflow System
 
-### AI 圖片分析
-```tsx
-<ImageAnalysis onAnalyze={handleAnalyze} />
-```
+新實作的詐騙檢測工作流程系統基於 LangGraph 設計概念，提供模組化且靈活的詐騙檢測方法。
 
-## 數據庫配置
-### MongoDB 配置
-```typescript
-import { MongoClient } from 'mongodb';
+#### 核心組件
+- `TextAnalysisTool`: 可疑文字訊息分析
+- `ImageAnalysisTool`: 詐騙圖片檢測
+- `TransactionAnalysisTool`: 可疑交易監控
+- `PhoneCallAnalysisTool`: 通話模式分析
 
-const client = new MongoClient(process.env.MONGODB_URI);
-await client.connect();
-```
-
-### Redis 配置
-```typescript
-import { createClient } from 'redis';
-
-const client = createClient({
-  url: process.env.REDIS_URL
-});
-await client.connect();
-```
-
-## 待開發功能
-- [ ] 深色模式支持
-- [ ] 多語言支持
-- [ ] 離線功能支持
-- [ ] 生物認證整合
-- [ ] Line Bot 自動回覆功能
-- [ ] RAG 系統優化
-- [ ] 群組行為分析
-- [ ] API 使用量預警
-
-## 貢獻指南
-1. Fork 專案
-2. 創建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 開啟 Pull Request
-
-## 授權
-本專案使用 MIT 授權 - 查看 [LICENSE](LICENSE) 檔案瞭解詳情
-Copyright (c) 2024 銀心永晟科技
-
-## 支持與聯繫
-- Email: kilong31442@gmail.com
-- LinkedIn: https://www.linkedin.com/in/zih-jia-luo-2b49a31b3/
-- Medium: https://medium.com/@kilong31442
-- GitHub: https://github.com/kevin801221/silverheart_app.git
-
-## 疑難排解
-如果遇到安裝或運行問題：
-
-1. 清除 node_modules 並重新安裝：
-```bash
-rm -rf node_modules
-npm install
-```
-
-2. 確保 TypeScript 配置正確：
-```bash
-npm install -D typescript @types/react @types/react-dom
-```
-
-3. 檢查 Vite 配置：
-```bash
-npm install -D vite @vitejs/plugin-react
-```
-
-
-## 🎯 New Feature: Fraud Detection Workflow System
-
-Our app has implemented a new workflow system based on the LangGraph design concept, providing a modular and flexible approach to fraud detection.
-
-### Core Components
-
-#### 1. Tool Nodes
-- `TextAnalysisTool`: Analyzes suspicious text messages
-- `ImageAnalysisTool`: Detects fraudulent images
-- `TransactionAnalysisTool`: Monitors suspicious transactions
-- `PhoneCallAnalysisTool`: Analyzes call patterns for fraud detection
-
-#### 2. Workflow State Management
-The system maintains a comprehensive state including:
-- Message history
-- Current analysis stage
-- Risk level assessment
-- Detection results from multiple tools
-
-#### 3. Event-Driven Architecture
-- Real-time analysis updates
-- Asynchronous processing
-- UI integration through event emission
-
-### Implementation Example
-
+#### 實作範例
 ```typescript
 const workflow = new FraudDetectionWorkflow();
 
-// Event listener setup
+// 事件監聽設置
 workflow.on('analysisComplete', ({ type, result, state }) => {
   if (state.riskLevel > 0.8) {
     triggerHighRiskAlert(result);
   }
 });
 
-// Multiple analysis types support
+// 支援多種分析類型
 await workflow.analyze(textData, "text");
 await workflow.analyze(imageData, "image");
 await workflow.analyze(transactionData, "transaction");
-
-// Comprehensive report generation
-const report = await workflow.generateReport();
 ```
 
-### Key Benefits
+## 故障排除指南
 
-1. **Modularity**
-   - Independent analysis modules
-   - Easy to add new detection tools
-   - Simplified testing and maintenance
+### 常見問題解決
 
-2. **State Management**
-   - Complete workflow state tracking
-   - Historical analysis preservation
-   - Multi-step analysis support
+1. **前端開發環境問題**
+```bash
+# 清除依賴並重新安裝
+rm -rf node_modules
+npm install
 
-3. **Event-Driven System**
-   - Event-based notifications
-   - Asynchronous workflow
-   - Seamless UI integration
+# 清除快取
+npm cache clean --force
+```
 
-4. **Extensibility**
-   - Simple tool addition process
-   - Custom analysis logic support
-   - Flexible reporting mechanism
+2. **LINE Bot 連接問題**
+- 確認 ngrok 是否正常運行
+- 檢查 Webhook URL 設置是否正確
+- 確保環境變數正確設置
 
-### Future Enhancements
+3. **資料庫連接問題**
+- 檢查資料庫連接字串
+- 確認資料庫服務是否運行
+- 檢查網路連接狀態
 
-- Integration with machine learning models
-- Additional analysis tools
-- Enhanced reporting capabilities
-- Real-time monitoring dashboard
+### TypeScript 相關問題
+```bash
+# 重新安裝 TypeScript
+npm install -D typescript @types/react @types/react-dom
 
----
+# 生成新的 tsconfig.json
+npx tsc --init
+```
 
-[Remaining previous content...]
+## 待開發功能
+- [ ] 深色模式支持
+- [ ] 多語言系統
+- [ ] 離線功能
+- [ ] 生物認證
+- [ ] Line Bot 自動回覆優化
+- [ ] RAG 系統增強
+- [ ] 群組行為分析
+- [ ] API 使用量監控
+
+## 貢獻指南
+1. Fork 專案
+2. 創建特性分支 (`git checkout -b feature/YourFeature`)
+3. 提交更改 (`git commit -m 'Add YourFeature'`)
+4. 推送到分支 (`git push origin feature/YourFeature`)
+5. 開啟 Pull Request
+
+## 授權與支持
+- **授權**: Apache2.0
+- **Email**: kilong31442@gmail.com
+- **LinkedIn**: https://www.linkedin.com/in/zih-jia-luo-2b49a31b3/
+- **GitHub**: https://github.com/kevin801221/silverheart_app.git
+
+### 聯繫支持
+如有任何問題或建議，歡迎透過以上管道聯繫，或在 GitHub 上開啟 Issue。
+
+Copyright (c) 2024 銀心永晟科技
