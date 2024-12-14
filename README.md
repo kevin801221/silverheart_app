@@ -1,3 +1,36 @@
+# SilverHeart: AI-Powered Anti-Fraud System 🛡️
+
+In response to the heartbreaking surge in fraud cases, particularly those targeting vulnerable individuals like our elderly parents and grandparents, I've developed SilverHeart - an innovative AI-powered anti-fraud protection system.
+
+## Why SilverHeart? 💝
+
+After witnessing numerous tragic cases of fraud, including the devastating "pig butchering" scams that have destroyed families and lives, I decided to take action. I refuse to stand by and watch more people fall victim to these sophisticated scams. Every story of financial loss represents not just money, but shattered dreams, trust, and sometimes entire life savings.
+
+## What Makes SilverHeart Different? 🤖
+
+- **Intelligent LINE Bot Integration**: Leveraging the most popular messaging platform in Asia to provide real-time fraud prevention
+- **RAG-Enhanced Response System**: Utilizing advanced Retrieval Augmented Generation for accurate, up-to-date fraud detection
+- **Multi-Agent System**: Simulating real-time web searches and information verification
+- **User-Friendly Interface**: Designed with elderly users in mind, making complex security accessible to all
+
+## Project Goals 🎯
+
+1. Prevent financial fraud before it happens
+2. Educate users about the latest scam techniques
+3. Provide immediate support when suspicious activities are detected
+4. Build a stronger, safer community through shared knowledge
+
+## Get Involved 🤝
+
+This is more than just a project - it's a mission to protect our loved ones. Check out the project and contribute:
+
+[SilverHeart Project Repository](https://github.com/kevin801221/silverheart_app.git)
+
+Together, we can build a shield against fraud and ensure no more families have to experience the devastation of scams. Because every parent, grandparent, and vulnerable individual deserves to feel safe and protected in our digital world.
+
+#AntiFraud #AIForGood #ElderProtection #FraudPrevention #TechForGood
+
+Let's make the digital world a safer place for everyone, one line of code at a time. 🌟
 # SilverHeart - 智能防詐系統
 
 SilverHeart 是一個現代化的智能防詐騙系統，使用 React + TypeScript + Tailwind CSS 開發，整合了 AI 圖片分析和 Line 管理功能，提供全方位的防詐騙解決方案。
