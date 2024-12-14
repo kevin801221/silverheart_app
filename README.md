@@ -2,6 +2,109 @@
 
 SilverHeart 是一個現代化的智能防詐騙系統，使用 React + TypeScript + Tailwind CSS 開發，整合了 AI 圖片分析和 Line 管理功能，提供全方位的防詐騙解決方案。
 
+## 最新更新AI內容 (2024/12/14)
+
+### 1. Line Bot 智能升級
+#### 1.1 交互式搜索體驗
+- 新增模擬網路搜索功能，提供更真實的AI助手體驗
+- 整合打字機效果，實現漸進式信息展示
+- 模擬RAG（Retrieval Augmented Generation）流程，展示實時檢索過程
+
+#### 1.2 Agent系統實現
+```typescript
+const agentBehaviors = {
+  搜索階段: "🔍 正在搜索相關資訊...",
+  資料庫連接: "📡 連接到反詐騙資料庫...",
+  AI分析: "🤖 使用 AI 分析最新案例...",
+  信息整合: "📊 彙整相關資訊..."
+}
+```
+- 模擬多階段處理流程
+- 展示AI決策過程
+- 提供透明的處理步驟說明
+
+### 2. 架構改進
+#### 2.1 模組化設計
+- 分離服務邏輯與展示層
+- 統一類型定義
+- 可擴展的消息處理系統
+
+```typescript
+interface MessageResponse {
+  content: string;
+  type: 'instant' | 'typing' | 'searching';
+  searchResults?: string[];
+}
+```
+
+#### 2.2 Mock資料結構
+```typescript
+const mockSearchResults = {
+  "投資詐騙": [
+    "https://www.165.gov.tw/investement-fraud/article/2024/03/15",
+    // ... 更多相關連結
+  ]
+}
+```
+
+### 3. 未來規劃功能
+#### 3.1 自動化內容更新
+- [ ] 實現自動爬蟲系統，定期更新詐騙案例資料庫
+- [ ] 使用LLM自動分類和整理新案例
+- [ ] 建立動態更新的知識庫
+
+#### 3.2 智能分析升級
+- [ ] 整合真實的RAG系統
+- [ ] 添加多模態分析能力
+- [ ] 實現跨語言詐騙模式識別
+
+#### 3.3 使用者互動優化
+- [ ] 支援多輪對話記憶
+- [ ] 個性化回應定制
+- [ ] 情境感知回應系統
+
+### 4. 技術實現重點
+```typescript
+// 核心消息處理
+async function handleLineMessage(message: string): Promise<MessageResponse> {
+  // 智能消息分類與處理
+  // RAG模擬與回應生成
+  // 動態內容整合
+}
+
+// 搜索序列生成
+async function generateSearchSequence(query: string): Promise<string[]> {
+  // 模擬網絡搜索過程
+  // 相關資源檢索
+  // 結果排序與過濾
+}
+```
+
+### 5. 安裝與配置
+新增配置項：
+```bash
+# 環境變數設置
+LINE_CHANNEL_ACCESS_TOKEN=your_access_token
+LINE_CHANNEL_SECRET=your_channel_secret
+OPENAI_API_KEY=your_api_key
+```
+
+### 6. 使用說明
+1. 安裝依賴：`npm install`
+2. 設置環境變數
+3. 啟動服務：
+   ```bash
+   npm run dev        # 前端開發服務
+   cd server && node lineBotService.js  # LINE Bot 服務
+   ```
+
+### 7. 注意事項
+- 當前搜索功能為模擬實現，將在後續版本中整合真實搜索
+- 建議在測試環境中充分驗證新功能
+- 保持環境變數的安全性
+
+---
+
 ## 專案架構圖
 ![專案架構road map](/src/assets/structure.png)
 
@@ -253,112 +356,6 @@ npm install -D typescript @types/react @types/react-dom
 # 生成新的 tsconfig.json
 npx tsc --init
 ```
-# SilverHeart Project
-
-[previous content remains the same...]
-
-## 最新更新AI內容 (2024/12/14)
-
-### 1. Line Bot 智能升級
-#### 1.1 交互式搜索體驗
-- 新增模擬網路搜索功能，提供更真實的AI助手體驗
-- 整合打字機效果，實現漸進式信息展示
-- 模擬RAG（Retrieval Augmented Generation）流程，展示實時檢索過程
-
-#### 1.2 Agent系統實現
-```typescript
-const agentBehaviors = {
-  搜索階段: "🔍 正在搜索相關資訊...",
-  資料庫連接: "📡 連接到反詐騙資料庫...",
-  AI分析: "🤖 使用 AI 分析最新案例...",
-  信息整合: "📊 彙整相關資訊..."
-}
-```
-- 模擬多階段處理流程
-- 展示AI決策過程
-- 提供透明的處理步驟說明
-
-### 2. 架構改進
-#### 2.1 模組化設計
-- 分離服務邏輯與展示層
-- 統一類型定義
-- 可擴展的消息處理系統
-
-```typescript
-interface MessageResponse {
-  content: string;
-  type: 'instant' | 'typing' | 'searching';
-  searchResults?: string[];
-}
-```
-
-#### 2.2 Mock資料結構
-```typescript
-const mockSearchResults = {
-  "投資詐騙": [
-    "https://www.165.gov.tw/investement-fraud/article/2024/03/15",
-    // ... 更多相關連結
-  ]
-}
-```
-
-### 3. 未來規劃功能
-#### 3.1 自動化內容更新
-- [ ] 實現自動爬蟲系統，定期更新詐騙案例資料庫
-- [ ] 使用LLM自動分類和整理新案例
-- [ ] 建立動態更新的知識庫
-
-#### 3.2 智能分析升級
-- [ ] 整合真實的RAG系統
-- [ ] 添加多模態分析能力
-- [ ] 實現跨語言詐騙模式識別
-
-#### 3.3 使用者互動優化
-- [ ] 支援多輪對話記憶
-- [ ] 個性化回應定制
-- [ ] 情境感知回應系統
-
-### 4. 技術實現重點
-```typescript
-// 核心消息處理
-async function handleLineMessage(message: string): Promise<MessageResponse> {
-  // 智能消息分類與處理
-  // RAG模擬與回應生成
-  // 動態內容整合
-}
-
-// 搜索序列生成
-async function generateSearchSequence(query: string): Promise<string[]> {
-  // 模擬網絡搜索過程
-  // 相關資源檢索
-  // 結果排序與過濾
-}
-```
-
-### 5. 安裝與配置
-新增配置項：
-```bash
-# 環境變數設置
-LINE_CHANNEL_ACCESS_TOKEN=your_access_token
-LINE_CHANNEL_SECRET=your_channel_secret
-OPENAI_API_KEY=your_api_key
-```
-
-### 6. 使用說明
-1. 安裝依賴：`npm install`
-2. 設置環境變數
-3. 啟動服務：
-   ```bash
-   npm run dev        # 前端開發服務
-   cd server && node lineBotService.js  # LINE Bot 服務
-   ```
-
-### 7. 注意事項
-- 當前搜索功能為模擬實現，將在後續版本中整合真實搜索
-- 建議在測試環境中充分驗證新功能
-- 保持環境變數的安全性
-
----
 
 ## 待開發功能
 - [ ] 深色模式支持
