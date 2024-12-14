@@ -1,17 +1,20 @@
-// src/components/pages/LineManagement.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LineChart, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts';
-import { 
-  Users, Activity, History, Search, AlertTriangle, 
+import {
+  Users, Activity, History, Search, AlertTriangle,
   MessageCircle, Settings, Database
 } from 'lucide-react';
-import { fraudPreventionQA, handleLineMessage } from '@/services/lineService';
-
+import {
+  fraudPreventionQA,
+  handleLineMessage,
+  generateDelaySequence,
+  generateSearchSequence,
+  type MessageResponse
+} from '@/services/lineService';
 // API 監控數據
 const mockApiData = [
   { time: '00:00', calls: 120, responseTime: 230, errorRate: 0.5 },
@@ -45,19 +48,95 @@ const mockGroups = [
 export default function LineManagement() {
   const [activeTab, setActiveTab] = useState('bot');
   const [testMessage, setTestMessage] = useState('');
-  const [testResponse, setTestResponse] = useState('');
+  const [displayText, setDisplayText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const [botStatus, setBotStatus] = useState({
     isActive: true,
-    friendCount: 1234,
-    messageCount: 5678,
+    friendCount: 6,
+    messageCount: 531,
     lastActive: new Date().toLocaleString()
   });
 
-  // 測試機器人回應
+  const typeText = useCallback((text: string, delays: number[]) => {
+    setIsTyping(true);
+    setDisplayText('');
+
+    let currentIndex = 0;
+    const startTime = Date.now();
+
+    const updateText = () => {
+      const elapsed = Date.now() - startTime;
+
+      while (currentIndex < text.length && delays[currentIndex] <= elapsed) {
+        setDisplayText(text.substring(0, currentIndex + 1));
+        currentIndex++;
+      }
+
+      if (currentIndex < text.length) {
+        requestAnimationFrame(updateText);
+      } else {
+        setIsTyping(false);
+      }
+    };
+
+    requestAnimationFrame(updateText);
+  }, []);
+
   const handleTest = async () => {
-    if (!testMessage.trim()) return;
-    const response = await handleLineMessage(testMessage);
-    setTestResponse(response);
+    try {
+      if (!testMessage.trim()) return;
+      
+      setIsTyping(true);
+      setDisplayText(''); // 清空現有顯示
+      
+      // 添加一些日誌來debug
+      console.log('Starting test with message:', testMessage);
+      
+      const response = await handleLineMessage(testMessage);
+      console.log('Got response:', response);
+  
+      if (response.type === 'searching') {
+        // 首先顯示搜索過程
+        const messages = [
+          "🔍 正在搜索相關資訊...",
+          "📡 連接到反詐騙資料庫...",
+          "🤖 使用 AI 分析最新案例...",
+          "📊 彙整相關資訊...",
+        ];
+        
+        // 逐步顯示搜索訊息
+        for (let i = 0; i < messages.length; i++) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          setDisplayText(prev => prev + messages[i] + '\n');
+        }
+        
+        // 如果有搜索結果，顯示它們
+        if (response.searchResults && response.searchResults.length > 0) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          setDisplayText(prev => prev + '\n找到以下相關資源：\n');
+          
+          for (const url of response.searchResults) {
+            await new Promise(resolve => setTimeout(resolve, 400));
+            setDisplayText(prev => prev + `🔗 ${url}\n`);
+          }
+        }
+        
+        // 最後顯示實際回答
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setDisplayText(prev => prev + '\n' + response.content);
+        
+      } else if (response.type === 'typing') {
+        const delays = generateDelaySequence(response.content);
+        typeText(response.content, delays);
+      } else {
+        setDisplayText(response.content);
+      }
+    } catch (error) {
+      console.error('Error in handleTest:', error);
+      setDisplayText('處理訊息時發生錯誤，請稍後再試。');
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -72,7 +151,6 @@ export default function LineManagement() {
           <TabsTrigger value="history">歷史分析</TabsTrigger>
         </TabsList>
 
-        {/* 機器人設置頁面 */}
         <TabsContent value="bot">
           <div className="space-y-6">
             {/* 機器人狀態卡片 */}
@@ -87,10 +165,12 @@ export default function LineManagement() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      <div className={`w-3 h-3 rounded-full ${botStatus.isActive ? 'bg-green-500' : 'bg-red-500'}`}></div>
                       <span className="text-sm font-medium">運行狀態</span>
                     </div>
-                    <p className="text-green-600 font-medium">正常運行中</p>
+                    <p className={`${botStatus.isActive ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                      {botStatus.isActive ? '正常運行中' : '已停止'}
+                    </p>
                   </div>
                   <div className="space-y-1">
                     <span className="text-sm font-medium">好友數量</span>
@@ -124,12 +204,18 @@ export default function LineManagement() {
                       value={testMessage}
                       onChange={(e) => setTestMessage(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleTest()}
+                      disabled={isTyping}
                     />
-                    <Button onClick={handleTest}>測試</Button>
+                    <Button
+                      onClick={handleTest}
+                      disabled={isTyping}
+                    >
+                      測試
+                    </Button>
                   </div>
-                  {testResponse && (
-                    <div className="p-4 bg-gray-50 rounded-lg whitespace-pre-wrap">
-                      {testResponse}
+                  {displayText && (
+                    <div className="p-4 bg-gray-50 rounded-lg whitespace-pre-wrap min-h-[200px] font-mono text-sm">
+                      {displayText}
                     </div>
                   )}
                 </div>
@@ -149,7 +235,7 @@ export default function LineManagement() {
                   {fraudPreventionQA.map((qa, index) => (
                     <div
                       key={index}
-                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                       onClick={() => {
                         setTestMessage(qa.question);
                         handleTest();
@@ -219,23 +305,23 @@ export default function LineManagement() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="calls" 
-                    stroke="#8884d8" 
-                    name="調用次數" 
+                  <Line
+                    type="monotone"
+                    dataKey="calls"
+                    stroke="#8884d8"
+                    name="調用次數"
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="responseTime" 
-                    stroke="#82ca9d" 
-                    name="響應時間(ms)" 
+                  <Line
+                    type="monotone"
+                    dataKey="responseTime"
+                    stroke="#82ca9d"
+                    name="響應時間(ms)"
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="errorRate" 
-                    stroke="#ff7300" 
-                    name="錯誤率(%)" 
+                  <Line
+                    type="monotone"
+                    dataKey="errorRate"
+                    stroke="#ff7300"
+                    name="錯誤率(%)"
                   />
                 </LineChart>
               </div>
@@ -251,8 +337,8 @@ export default function LineManagement() {
             </CardHeader>
             <CardContent>
               <div className="flex gap-4 mb-4">
-                <Input 
-                  type="text" 
+                <Input
+                  type="text"
                   placeholder="搜索歷史對話..."
                 />
                 <Button>

@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/services/lineBotService.js",
-    "dev": "ts-node src/services/lineBotService.ts"
+    "dev": "vite",  
+    "line-bot": "node server/lineBotService.js",  
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   }
   ,
   "dependencies": {
