@@ -15,6 +15,7 @@ import {
   generateSearchSequence,
   type MessageResponse
 } from '@/services/lineService';
+import LineBotTester from './LineBotTester';  // 引入新的測試介面
 // API 監控數據
 const mockApiData = [
   { time: '00:00', calls: 120, responseTime: 230, errorRate: 0.5 },
@@ -141,14 +142,40 @@ export default function LineManagement() {
 
   return (
     <div className="container mx-auto p-4 space-y-6">
-      <h1 className="text-2xl font-bold mb-6">Line 管理中心</h1>
+      <h1 className="w-full grid grid-cols-5 gap-2 p-1">Line 管理中心</h1>
 
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="bot">機器人設置</TabsTrigger>
-          <TabsTrigger value="groups">群組管理</TabsTrigger>
-          <TabsTrigger value="api">API 監控</TabsTrigger>
-          <TabsTrigger value="history">歷史分析</TabsTrigger>
+      <TabsList className="w-full grid grid-cols-5 gap-2 p-1">
+          <TabsTrigger 
+            value="bot" 
+            className="py-2.5 data-[state=active]:bg-blue-500"
+          >
+            機器人設置
+          </TabsTrigger>
+          <TabsTrigger 
+            value="testing" 
+            className="py-2.5 data-[state=active]:bg-blue-500"
+          >
+            測試控制台
+          </TabsTrigger>
+          <TabsTrigger 
+            value="groups" 
+            className="py-2.5 data-[state=active]:bg-blue-500"
+          >
+            群組管理
+          </TabsTrigger>
+          <TabsTrigger 
+            value="api" 
+            className="py-2.5 data-[state=active]:bg-blue-500"
+          >
+            API 監控
+          </TabsTrigger>
+          <TabsTrigger 
+            value="history" 
+            className="py-2.5 data-[state=active]:bg-blue-500"
+          >
+            歷史分析
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="bot">
@@ -352,6 +379,10 @@ export default function LineManagement() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+        {/* 新增的測試控制台分頁 */}
+        <TabsContent value="testing">
+          <LineBotTester />
         </TabsContent>
       </Tabs>
     </div>
