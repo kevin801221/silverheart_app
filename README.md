@@ -1,6 +1,142 @@
+# SilverHeart: AI-Powered Anti-Fraud System 🛡️
+
+In response to the heartbreaking surge in fraud cases, particularly those targeting vulnerable individuals like our elderly parents and grandparents, I've developed SilverHeart - an innovative AI-powered anti-fraud protection system.
+
+## Why SilverHeart? 💝
+
+After witnessing numerous tragic cases of fraud, including the devastating "pig butchering" scams that have destroyed families and lives, I decided to take action. I refuse to stand by and watch more people fall victim to these sophisticated scams. Every story of financial loss represents not just money, but shattered dreams, trust, and sometimes entire life savings.
+
+## What Makes SilverHeart Different? 🤖
+
+- **Intelligent LINE Bot Integration**: Leveraging the most popular messaging platform in Asia to provide real-time fraud prevention
+- **RAG-Enhanced Response System**: Utilizing advanced Retrieval Augmented Generation for accurate, up-to-date fraud detection
+- **Multi-Agent System**: Simulating real-time web searches and information verification
+- **User-Friendly Interface**: Designed with elderly users in mind, making complex security accessible to all
+
+## Project Goals 🎯
+
+1. Prevent financial fraud before it happens
+2. Educate users about the latest scam techniques
+3. Provide immediate support when suspicious activities are detected
+4. Build a stronger, safer community through shared knowledge
+
+## Get Involved 🤝
+
+This is more than just a project - it's a mission to protect our loved ones. Check out the project and contribute:
+
+[SilverHeart Project Repository](https://github.com/kevin801221/silverheart_app.git)
+
+Together, we can build a shield against fraud and ensure no more families have to experience the devastation of scams. Because every parent, grandparent, and vulnerable individual deserves to feel safe and protected in our digital world.
+
+#AntiFraud #AIForGood #ElderProtection #FraudPrevention #TechForGood
+
+Let's make the digital world a safer place for everyone, one line of code at a time. 🌟
 # SilverHeart - 智能防詐系統
 
 SilverHeart 是一個現代化的智能防詐騙系統，使用 React + TypeScript + Tailwind CSS 開發，整合了 AI 圖片分析和 Line 管理功能，提供全方位的防詐騙解決方案。
+
+## 最新更新AI內容 (2024/12/14)
+
+### 1. Line Bot 智能升級
+#### 1.1 交互式搜索體驗
+- 新增模擬網路搜索功能，提供更真實的AI助手體驗
+- 整合打字機效果，實現漸進式信息展示
+- 模擬RAG（Retrieval Augmented Generation）流程，展示實時檢索過程
+
+#### 1.2 Agent系統實現
+```typescript
+const agentBehaviors = {
+  搜索階段: "🔍 正在搜索相關資訊...",
+  資料庫連接: "📡 連接到反詐騙資料庫...",
+  AI分析: "🤖 使用 AI 分析最新案例...",
+  信息整合: "📊 彙整相關資訊..."
+}
+```
+- 模擬多階段處理流程
+- 展示AI決策過程
+- 提供透明的處理步驟說明
+
+### 2. 架構改進
+#### 2.1 模組化設計
+- 分離服務邏輯與展示層
+- 統一類型定義
+- 可擴展的消息處理系統
+
+```typescript
+interface MessageResponse {
+  content: string;
+  type: 'instant' | 'typing' | 'searching';
+  searchResults?: string[];
+}
+```
+
+#### 2.2 Mock資料結構
+```typescript
+const mockSearchResults = {
+  "投資詐騙": [
+    "https://www.165.gov.tw/investement-fraud/article/2024/03/15",
+    // ... 更多相關連結
+  ]
+}
+```
+
+### 3. 未來規劃功能
+#### 3.1 自動化內容更新
+- [ ] 實現自動爬蟲系統，定期更新詐騙案例資料庫
+- [ ] 使用LLM自動分類和整理新案例
+- [ ] 建立動態更新的知識庫
+
+#### 3.2 智能分析升級
+- [ ] 整合真實的RAG系統
+- [ ] 添加多模態分析能力
+- [ ] 實現跨語言詐騙模式識別
+
+#### 3.3 使用者互動優化
+- [ ] 支援多輪對話記憶
+- [ ] 個性化回應定制
+- [ ] 情境感知回應系統
+
+### 4. 技術實現重點
+```typescript
+// 核心消息處理
+async function handleLineMessage(message: string): Promise<MessageResponse> {
+  // 智能消息分類與處理
+  // RAG模擬與回應生成
+  // 動態內容整合
+}
+
+// 搜索序列生成
+async function generateSearchSequence(query: string): Promise<string[]> {
+  // 模擬網絡搜索過程
+  // 相關資源檢索
+  // 結果排序與過濾
+}
+```
+
+### 5. 安裝與配置
+新增配置項：
+```bash
+# 環境變數設置
+LINE_CHANNEL_ACCESS_TOKEN=your_access_token
+LINE_CHANNEL_SECRET=your_channel_secret
+OPENAI_API_KEY=your_api_key
+```
+
+### 6. 使用說明
+1. 安裝依賴：`npm install`
+2. 設置環境變數
+3. 啟動服務：
+   ```bash
+   npm run dev        # 前端開發服務
+   cd server && node lineBotService.js  # LINE Bot 服務
+   ```
+
+### 7. 注意事項
+- 當前搜索功能為模擬實現，將在後續版本中整合真實搜索
+- 建議在測試環境中充分驗證新功能
+- 保持環境變數的安全性
+
+---
 
 ## 專案架構圖
 ![專案架構road map](/src/assets/structure.png)
